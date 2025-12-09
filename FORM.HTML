@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscripción Institucional | Cruz Roja</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#0f172a', // Navy profundo
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        
+        /* Animaciones */
+        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Asterisco rojo para requeridos */
+        .required::after {
+            content: "*";
+            color: #ef4444;
+            margin-left: 4px;
+        }
+
+        /* Loader del botón */
+        .loader {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Estilos personalizados para inputs */
+        .form-input {
+            transition: all 0.2s;
+        }
+        .form-input:focus {
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        }
+    </style>
+</head>
+<body class="text-slate-600 antialiased py-8 px-4 sm:px-6 lg:px-8">
+
+    <div class="max-w-6xl mx-auto">
+        
+        <!-- Header con Logo Institucional -->
+        <div class="bg-white rounded-t-2xl shadow-sm border-b border-slate-100 p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+            <!-- Barra decorativa superior -->
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand-800 via-brand-600 to-brand-500"></div>
+            
+            <div class="z-10 text-center md:text-left flex-1">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold uppercase tracking-wider mb-3">
+                    <span class="w-2 h-2 rounded-full bg-brand-600"></span>
+                    Inscripciones Abiertas
+                </div>
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">Formulario de Inscripción</h1>
+                <p class="mt-2 text-slate-500 text-lg">Cruz Roja Colombiana Seccional Bolívar</p>
+            </div>
+            
+            <!-- Logo Imagen -->
+            <div class="flex-shrink-0 z-10">
+                <img src="https://cruzrojabolivar.org/wp-content/uploads/2025/05/pagina-1-scaled.png" alt="Logo Cruz Roja Seccional Bolívar" class="h-24 md:h-32 w-auto object-contain rounded-lg">
+            </div>
+        </div>
+
+        <form id="inscriptionForm" class="bg-white rounded-b-2xl shadow-xl border border-slate-100 p-8 md:p-12 space-y-10" novalidate>
+            
+            <!-- 1. INFORMACIÓN GENERAL -->
+            <section>
+                <div class="flex items-center gap-3 mb-6 pb-2 border-b border-slate-100">
+                    <div class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-700">
+                        <i class="fa-regular fa-user text-lg"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Información Personal</h2>
+                        <p class="text-sm text-slate-400">Datos básicos del aspirante</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-6">
+                    <!-- Tipo Documento -->
+                    <div class="group">
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Tipo de documento</label>
+                        <div class="relative">
+                            <select name="tipo_documento" class="form-input w-full rounded-lg border-slate-300 text-slate-700 bg-slate-50 focus:bg-white focus:border-brand-500 py-2.5 px-3 appearance-none" required>
+                                <option value="">Seleccione...</option>
+                                <option value="CC">Cédula de Ciudadanía</option>
+                                <option value="TI">Tarjeta de Identidad</option>
+                                <option value="CE">Cédula de Extranjería</option>
+                                <option value="PAS">Pasaporte</option>
+                                <option value="PEP">PEP</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Número Identificación -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Número de identificación</label>
+                        <input type="number" name="numero_identificacion" class="form-input w-full rounded-lg border-slate-300 bg-slate-50 focus:bg-white focus:border-brand-500 text-slate-900 py-2.5 px-3 placeholder-slate-400" placeholder="Ej: 1045678900" required>
+                    </div>
+
+                    <!-- Fecha Nacimiento -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Fecha de nacimiento</label>
+                        <input type="date" name="fecha_nacimiento" class="form-input w-full rounded-lg border-slate-300 bg-slate-50 focus:bg-white focus:border-brand-500 text-slate-900 py-2.5 px-3" required>
+                    </div>
+
+                    <!-- Nombres y Apellidos -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Primer nombre</label>
+                        <input type="text" name="primer_nombre" class="form-input w-full rounded-lg border-slate-300 bg-slate-50 focus:bg-white focus:border-brand-500 text-slate-900 py-2.5 px-3" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Segundo nombre</label>
+                        <input type="text" name="segundo_nombre" class="form-input w-full rounded-lg border-slate-300 bg-slate-50 focus:bg-white focus:border-brand-500 text-slate-900 py-2.5 px-3">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Primer apellido</label>
+                        <input type="text" name="primer_apellido" class="form-input w-full rounded-lg border-slate-300 bg-slate-50 focus:bg-white focus:border-brand-500 text-slate-900 py-2.5 px-3" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Segundo apellido</label>
+                        <input type="text" name="segundo_apellido" class="form-input w-full rounded-lg border-slate-300 bg-slate-50 focus:bg-white focus:border-brand-500 text-slate-900 py-2.5 px-3">
+                    </div>
+
+                    <!-- Género -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Género</label>
+                        <div class="relative">
+                            <select name="genero" class="form-input w-full rounded-lg border-slate-300 text-slate-700 bg-slate-50 focus:bg-white focus:border-brand-500 py-2.5 px-3 appearance-none" required>
+                                <option value="">Seleccione...</option>
+                                <option value="M">Masculino</option>
+                                <option value="F">Femenino</option>
+                                <option value="O">Otro</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contacto -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Correo electrónico</label>
+                        <div class="relative">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center px-3 text-slate-400">
+                                <i class="fa-regular fa-envelope"></i>
+                            </div>
+                            <input type="email" name="email" class="form-input w-full rounded-lg border-slate-300 bg-slate-50 focus:bg-white focus:border-brand-500 text-slate-900 py-2.5 pl-10 pr-3" placeholder="nombre@correo.com" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Celular</label>
+                        <div class="relative">
+                             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center px-3 text-slate-400">
+                                <i class="fa-solid fa-mobile-screen"></i>
+                            </div>
+                            <input type="tel" name="celular" class="form-input w-full rounded-lg border-slate-300 bg-slate-50 focus:bg-white focus:border-brand-500 text-slate-900 py-2.5 pl-10 pr-3" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Teléfono Fijo</label>
+                        <input type="tel" name="telefono" class="form-input w-full rounded-lg border-slate-300 bg-slate-50 focus:bg-white focus:border-brand-500 text-slate-900 py-2.5 px-3">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Ciudad de residencia</label>
+                        <input type="text" name="ciudad" class="form-input w-full rounded-lg border-slate-300 bg-slate-50 focus:bg-white focus:border-brand-500 text-slate-900 py-2.5 px-3" required>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Dirección completa</label>
+                        <input type="text" name="direccion" class="form-input w-full rounded-lg border-slate-300 bg-slate-50 focus:bg-white focus:border-brand-500 text-slate-900 py-2.5 px-3" placeholder="Calle, Carrera, Número, Barrio..." required>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. INFORMACIÓN ACADÉMICA -->
+            <section>
+                <div class="flex items-center gap-3 mb-6 pb-2 border-b border-slate-100">
+                    <div class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-700">
+                        <i class="fa-solid fa-graduation-cap text-lg"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Información del Programa</h2>
+                        <p class="text-sm text-slate-400">Selección académica</p>
+                    </div>
+                </div>
+
+                <!-- Modificado: Grid ahora tiene solo 2 columnas visibles efectivas para los 2 elementos restantes -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Tipo Programa -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Tipo de programa</label>
+                        <div class="relative">
+                            <select id="tipo_programa" name="tipo_programa" class="form-input w-full rounded-lg border-slate-300 text-slate-700 bg-slate-50 focus:bg-white focus:border-brand-500 py-2.5 px-3 appearance-none" required>
+                                <option value="">Seleccione...</option>
+                                <option value="Curso">Curso</option>
+                                <option value="Diplomado">Diplomado</option>
+                                <option value="Programa Técnico Laboral">Programa Técnico Laboral</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nombre Programa -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Nombre del curso/programa</label>
+                        <div class="relative">
+                            <select id="nombre_programa" name="nombre_programa" class="form-input w-full rounded-lg border-slate-300 text-slate-700 bg-slate-100 focus:bg-white focus:border-brand-500 py-2.5 px-3 appearance-none disabled:opacity-60 disabled:cursor-not-allowed" disabled required>
+                                <option value="">Seleccione primero el tipo...</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. INFORMACIÓN ADICIONAL (Técnico) -->
+            <section id="additional-info-section" class="hidden fade-in bg-slate-50 p-6 md:p-8 rounded-2xl border border-slate-200 shadow-inner">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center">
+                        <i class="fa-solid fa-clipboard-list text-sm"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">Detalles Adicionales</h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Loop through similar structure for additional fields -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Lugar de expedición de Documento</label>
+                        <input type="text" name="lugar_expedicion" class="additional-field form-input w-full rounded-lg border-slate-300 bg-white focus:border-brand-500 py-2 px-3">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Estrato</label>
+                        <select name="estrato" class="additional-field form-input w-full rounded-lg border-slate-300 bg-white focus:border-brand-500 py-2 px-3">
+                            <option value="">Seleccione...</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Estado civil</label>
+                        <select name="estado_civil" class="additional-field form-input w-full rounded-lg border-slate-300 bg-white focus:border-brand-500 py-2 px-3">
+                            <option value="">Seleccione...</option>
+                            <option value="Soltero">Soltero/a</option>
+                            <option value="Casado">Casado/a</option>
+                            <option value="Unión Libre">Unión Libre</option>
+                            <option value="Divorciado">Divorciado/a</option>
+                            <option value="Viudo">Viudo/a</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Nivel de formación</label>
+                        <select name="nivel_formacion" class="additional-field form-input w-full rounded-lg border-slate-300 bg-white focus:border-brand-500 py-2 px-3">
+                            <option value="">Seleccione...</option>
+                            <option value="Primaria">Primaria</option>
+                            <option value="Bachiller">Bachiller</option>
+                            <option value="Técnico">Técnico</option>
+                            <option value="Tecnólogo">Tecnólogo</option>
+                            <option value="Profesional">Profesional</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Ocupación</label>
+                        <select name="ocupacion" class="additional-field form-input w-full rounded-lg border-slate-300 bg-white focus:border-brand-500 py-2 px-3">
+                            <option value="">Seleccione...</option>
+                            <option value="Estudiante">Estudiante</option>
+                            <option value="Empleado">Empleado</option>
+                            <option value="Independiente">Independiente</option>
+                            <option value="Desempleado">Desempleado</option>
+                            <option value="Hogar">Hogar</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Grupo Sisbén</label>
+                        <select name="grupo_sisben" class="additional-field form-input w-full rounded-lg border-slate-300 bg-white focus:border-brand-500 py-2 px-3">
+                            <option value="">Seleccione...</option>
+                            <option value="A">Grupo A</option>
+                            <option value="B">Grupo B</option>
+                            <option value="C">Grupo C</option>
+                            <option value="D">Grupo D</option>
+                            <option value="No tiene">No tiene</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Subgrupo Sisbén</label>
+                        <input type="text" name="subgrupo_sisben" placeholder="Ej: A1" class="form-input w-full rounded-lg border-slate-300 bg-white focus:border-brand-500 py-2 px-3">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">EPS</label>
+                        <input type="text" name="eps" class="additional-field form-input w-full rounded-lg border-slate-300 bg-white focus:border-brand-500 py-2 px-3">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Discapacidad</label>
+                        <select name="discapacidad" class="additional-field form-input w-full rounded-lg border-slate-300 bg-white focus:border-brand-500 py-2 px-3">
+                            <option value="Ninguna">Ninguna</option>
+                            <option value="Física">Física</option>
+                            <option value="Auditiva">Auditiva</option>
+                            <option value="Visual">Visual</option>
+                            <option value="Cognitiva">Cognitiva</option>
+                            <option value="Otra">Otra</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1 required">Tipo de sangre</label>
+                        <select name="tipo_sangre" class="additional-field form-input w-full rounded-lg border-slate-300 bg-white focus:border-brand-500 py-2 px-3">
+                            <option value="">Seleccione...</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. CARGA DE ARCHIVOS -->
+            <section id="files-section" class="hidden fade-in">
+                <div class="flex items-center gap-3 mb-6 pb-2 border-b border-slate-100">
+                    <div class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-700">
+                        <i class="fa-solid fa-cloud-arrow-up text-lg"></i>
+                    </div>
+                    <div>
+                        <!-- MODIFICADO: Texto cambiado para reflejar opcionalidad -->
+                        <h2 class="text-xl font-bold text-slate-900">Documentos de Soporte</h2>
+                        <p class="text-sm text-slate-400">Archivos PDF o Imagen (Opcional - Máx 8MB)</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Copia Documento -->
+                    <div id="container-file-documento" class="group relative border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:bg-brand-50 hover:border-brand-400 transition-colors cursor-pointer bg-slate-50 relative">
+                        <div class="absolute top-3 right-3 hidden check-indicator transform transition-transform scale-100">
+                            <i class="fa-solid fa-circle-check text-green-500 text-2xl bg-white rounded-full shadow-sm"></i>
+                        </div>
+                        <div class="mb-3">
+                            <i class="fa-regular fa-id-card text-4xl text-slate-400 group-hover:text-brand-500 transition-colors"></i>
+                        </div>
+                        <!-- MODIFICADO: Eliminada clase 'required' y el atributo required del input -->
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Documento de Identidad (Opcional)</label>
+                        <p class="text-xs text-slate-400 mb-3 file-status-text">Subir PDF o Imagen</p>
+                        <input type="file" name="file_documento" accept=".pdf,image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-white file:text-brand-700 file:shadow-sm hover:file:bg-brand-100 cursor-pointer">
+                    </div>
+
+                    <!-- Acta de Grado -->
+                    <div id="container-file-acta" class="hidden group relative border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:bg-green-50 hover:border-green-400 transition-colors cursor-pointer bg-slate-50 relative">
+                        <div class="absolute top-3 right-3 hidden check-indicator transform transition-transform scale-100">
+                            <i class="fa-solid fa-circle-check text-green-500 text-2xl bg-white rounded-full shadow-sm"></i>
+                        </div>
+                        <div class="mb-3">
+                            <i class="fa-solid fa-scroll text-4xl text-slate-400 group-hover:text-green-500 transition-colors"></i>
+                        </div>
+                        <!-- MODIFICADO: Eliminada clase 'required' -->
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Acta de Grado (Opcional)</label>
+                         <p class="text-xs text-slate-400 mb-3 file-status-text">Subir PDF o Imagen</p>
+                        <input type="file" name="file_acta_grado" accept=".pdf,image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-white file:text-green-700 file:shadow-sm hover:file:bg-green-100 cursor-pointer">
+                    </div>
+
+                    <!-- Diploma -->
+                    <div id="container-file-diploma" class="hidden group relative border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:bg-purple-50 hover:border-purple-400 transition-colors cursor-pointer bg-slate-50 relative">
+                        <div class="absolute top-3 right-3 hidden check-indicator transform transition-transform scale-100">
+                            <i class="fa-solid fa-circle-check text-green-500 text-2xl bg-white rounded-full shadow-sm"></i>
+                        </div>
+                        <div class="mb-3">
+                            <i class="fa-solid fa-certificate text-4xl text-slate-400 group-hover:text-purple-500 transition-colors"></i>
+                        </div>
+                        <!-- MODIFICADO: Eliminada clase 'required' -->
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Diploma de Bachiller (Opcional)</label>
+                         <p class="text-xs text-slate-400 mb-3 file-status-text">Subir PDF o Imagen</p>
+                        <input type="file" name="file_diploma" accept=".pdf,image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-white file:text-purple-700 file:shadow-sm hover:file:bg-purple-100 cursor-pointer">
+                    </div>
+                </div>
+            </section>
+
+            <!-- BOTÓN ENVIAR -->
+            <div class="pt-8 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-xs text-slate-400 text-center md:text-left">
+                    Al enviar este formulario acepta nuestra política de tratamiento de datos personales.
+                </p>
+                <button type="submit" id="btnSubmit" class="w-full md:w-auto bg-brand-700 hover:bg-brand-800 text-white font-semibold py-3.5 px-8 rounded-xl shadow-lg shadow-brand-500/30 transform transition-all active:scale-95 flex items-center justify-center gap-2">
+                    <span id="btnText">Enviar Inscripción</span>
+                    <i class="fa-solid fa-paper-plane text-sm"></i>
+                    <div id="btnLoader" class="loader hidden"></div>
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- SCRIPT DE LÓGICA -->
+    <script>
+        // CONFIGURACIÓN WEBHOOK
+        const WEBHOOK_URL = "https://workflows.agentecrb.com/webhook/inscricion-cruz-roja-seccional-bolivar";
+
+        // DATOS MOCK DE PROGRAMAS
+        const programasData = {
+            'Curso': [
+                'Home Care – Entrenamiento Integral',
+                'Entrenamiento en Atención Prehospitalaria',
+                'Administración de Fármacos y Procedimientos Asistenciales',
+                'Normativo en Salud 4x1',
+                'Ventas en el Sector Farmacéutico',
+                'Cosmetología Integral & Bienestar',
+                'Manejo de Vehículos de Emergencias – MAVE'
+            ],
+            'Diplomado': [
+                'Banco de Sangre',
+                'Facturación en Servicios de la Salud',
+                'Gestión Integral del Riesgo',
+                'Derecho Internacional Humanitario',
+                'Profundización en UCI para Auxiliares de Enfermería',
+                'Seguridad del Paciente'
+            ],
+            'Programa Técnico Laboral': [
+                'Auxiliar de Enfermería',
+                'Auxiliar en Seguridad en el Trabajo',
+                'Asistente Administrativo',
+                'Asistencia y Soporte de Tecnologías de la información',
+                'Auxiliar Contable y Financiero',
+                'Auxiliar en Artes Gráficas',
+                'Auxiliar en Talento Humano',
+                'Auxiliar Administrativo en Salud'
+            ]
+        };
+
+        // NOTA: Se eliminó el objeto jornadasData ya que el input de sede/jornada fue removido
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('inscriptionForm');
+            const tipoProgramaSelect = document.getElementById('tipo_programa');
+            const nombreProgramaSelect = document.getElementById('nombre_programa');
+            // Eliminado: const sedeJornadaSelect = ...
+            const additionalInfoSection = document.getElementById('additional-info-section');
+            const filesSection = document.getElementById('files-section');
+            
+            const fileContainerActa = document.getElementById('container-file-acta');
+            const fileContainerDiploma = document.getElementById('container-file-diploma');
+            
+            // Referencias a inputs de archivo
+            const inputDiploma = form.querySelector('input[name="file_diploma"]');
+            const inputActa = form.querySelector('input[name="file_acta_grado"]');
+
+            // Campos que son obligatorios SOLO si es Técnico
+            const additionalRequiredFields = document.querySelectorAll('.additional-field');
+            // Nota: Ya no usamos .tech-file para logica, manejamos inputs individualmente
+
+            // 1. MANEJO DE CAMBIO DE PROGRAMA
+            tipoProgramaSelect.addEventListener('change', (e) => {
+                const tipo = e.target.value;
+
+                // Reset programa select (Jornada eliminado)
+                nombreProgramaSelect.innerHTML = '<option value="">Seleccione...</option>';
+                // Eliminado: sedeJornadaSelect reset
+                
+                // --- Reset visibilidad y requisitos de archivos/extras ---
+                additionalInfoSection.classList.add('hidden');
+                additionalRequiredFields.forEach(field => field.removeAttribute('required'));
+                
+                fileContainerActa.classList.add('hidden');
+                // MODIFICADO: Ya no se agrega required dinámicamente
+                // inputActa.removeAttribute('required'); 
+                inputActa.value = ''; // Limpiar si se oculta
+
+                fileContainerDiploma.classList.add('hidden');
+                // MODIFICADO: Ya no se agrega required dinámicamente
+                // inputDiploma.removeAttribute('required'); 
+                inputDiploma.value = ''; // Limpiar si se oculta
+
+                if (tipo && programasData[tipo]) {
+                    // Habilitar campos
+                    nombreProgramaSelect.disabled = false;
+                    nombreProgramaSelect.classList.remove('bg-slate-100');
+                    nombreProgramaSelect.classList.add('bg-slate-50');
+
+                    // Eliminado: Habilitación de sedeJornadaSelect
+
+                    // Cargar Programas
+                    programasData[tipo].forEach(prog => {
+                        const option = document.createElement('option');
+                        option.value = prog;
+                        option.textContent = prog;
+                        nombreProgramaSelect.appendChild(option);
+                    });
+
+                    // Eliminado: Carga de Jornadas
+                    
+                    // Mostrar sección de archivos (Documento de Identidad siempre visible aquí)
+                    filesSection.classList.remove('hidden');
+
+                    // --- Lógica Específica de Archivos ---
+                    
+                    // Diploma: Visible para Curso, Diplomado Y Técnico, pero OPCIONAL
+                    if (['Curso', 'Diplomado', 'Programa Técnico Laboral'].includes(tipo)) {
+                        fileContainerDiploma.classList.remove('hidden');
+                        // MODIFICADO: Eliminada la línea que hacía setAttribute required
+                    }
+
+                    // Técnico Laboral: Extras + Acta de Grado, pero Acta es OPCIONAL
+                    if (tipo === 'Programa Técnico Laboral') {
+                        additionalInfoSection.classList.remove('hidden');
+                        additionalRequiredFields.forEach(field => field.setAttribute('required', 'true'));
+                        
+                        fileContainerActa.classList.remove('hidden');
+                        // MODIFICADO: Eliminada la línea que hacía setAttribute required
+                    }
+
+                } else {
+                    // Deshabilitar campos si no hay selección
+                    nombreProgramaSelect.disabled = true;
+                    nombreProgramaSelect.classList.add('bg-slate-100');
+                    nombreProgramaSelect.classList.remove('bg-slate-50');
+
+                    // Eliminado: Deshabilitación de sedeJornadaSelect
+
+                    filesSection.classList.add('hidden');
+                }
+            });
+
+            // NUEVO: Lógica para el check verde al subir archivos
+            const allFileInputs = document.querySelectorAll('input[type="file"]');
+            allFileInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    const container = this.closest('div[id^="container-file-"]');
+                    const checkIndicator = container.querySelector('.check-indicator');
+                    const statusText = container.querySelector('.file-status-text');
+                    
+                    if (this.files && this.files.length > 0) {
+                        // Archivo seleccionado
+                        container.classList.remove('border-slate-300', 'border-dashed', 'bg-slate-50');
+                        container.classList.add('border-green-500', 'border-solid', 'bg-green-50');
+                        checkIndicator.classList.remove('hidden');
+                        statusText.textContent = "Archivo seleccionado";
+                        statusText.classList.add('text-green-600', 'font-medium');
+                        statusText.classList.remove('text-slate-400');
+                    } else {
+                        // Selección cancelada
+                        container.classList.add('border-slate-300', 'border-dashed', 'bg-slate-50');
+                        container.classList.remove('border-green-500', 'border-solid', 'bg-green-50');
+                        checkIndicator.classList.add('hidden');
+                        statusText.textContent = "Subir PDF o Imagen";
+                        statusText.classList.remove('text-green-600', 'font-medium');
+                        statusText.classList.add('text-slate-400');
+                    }
+                });
+            });
+
+            // 2. ENVÍO DEL FORMULARIO
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                // Validación nativa HTML5 visual
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Datos incompletos',
+                        text: 'Por favor, diligencie todos los campos obligatorios marcados.',
+                        confirmButtonColor: '#3b82f6'
+                    });
+                    return;
+                }
+
+                // Validación de tamaño de archivos
+                const fileInputs = form.querySelectorAll('input[type="file"]');
+                for (let input of fileInputs) {
+                    if (input.files.length > 0) {
+                        const file = input.files[0];
+                        // 8MB en bytes
+                        if (file.size > 8 * 1024 * 1024) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Archivo muy pesado',
+                                text: `El archivo ${file.name} supera el límite de 8MB.`,
+                            });
+                            return;
+                        }
+                    }
+                }
+
+                // UI Loading
+                const btnSubmit = document.getElementById('btnSubmit');
+                const btnText = document.getElementById('btnText');
+                const btnLoader = document.getElementById('btnLoader');
+                
+                btnSubmit.disabled = true;
+                btnSubmit.classList.add('opacity-75', 'cursor-not-allowed');
+                btnText.textContent = "Enviando...";
+                btnLoader.classList.remove('hidden');
+
+                try {
+                    await sendToN8N(form);
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Envío Exitoso!',
+                        text: 'Su inscripción ha sido recibida correctamente.',
+                        confirmButtonColor: '#10b981'
+                    }).then(() => {
+                        form.reset();
+                        // Reset visual de archivos
+                        document.querySelectorAll('.check-indicator').forEach(el => el.classList.add('hidden'));
+                        document.querySelectorAll('div[id^="container-file-"]').forEach(container => {
+                            container.classList.add('border-slate-300', 'border-dashed', 'bg-slate-50');
+                            container.classList.remove('border-green-500', 'border-solid', 'bg-green-50');
+                            const statusText = container.querySelector('.file-status-text');
+                            if(statusText) {
+                                statusText.textContent = "Subir PDF o Imagen";
+                                statusText.classList.remove('text-green-600', 'font-medium');
+                                statusText.classList.add('text-slate-400');
+                            }
+                        });
+
+                        // Reset manual de visibilidad secciones
+                        additionalInfoSection.classList.add('hidden');
+                        filesSection.classList.add('hidden');
+                        
+                        nombreProgramaSelect.innerHTML = '<option value="">Seleccione primero el tipo...</option>';
+                        nombreProgramaSelect.disabled = true;
+                        nombreProgramaSelect.classList.add('bg-slate-100');
+                        nombreProgramaSelect.classList.remove('bg-slate-50');
+
+                        // Eliminado: Reset sedeJornadaSelect
+
+                        window.scrollTo(0, 0);
+                    });
+
+                } catch (error) {
+                    console.error(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error en el envío',
+                        text: 'Hubo un problema al conectar con el servidor. Por favor intente nuevamente.',
+                        footer: error.message
+                    });
+                } finally {
+                    // UI Reset
+                    btnSubmit.disabled = false;
+                    btnSubmit.classList.remove('opacity-75', 'cursor-not-allowed');
+                    btnText.textContent = "Enviar Inscripción";
+                    btnLoader.classList.add('hidden');
+                }
+            });
+        });
+
+        // 3. FUNCIÓN DE ENVÍO A N8N (Base64 + JSON)
+        async function sendToN8N(formElement) {
+            const formData = new FormData(formElement);
+
+            // Helper: Convertir archivo a base64
+            async function fileToBase64(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        // reader.result es "data:application/pdf;base64,....."
+                        // Hacemos split para obtener solo la parte base64
+                        const base64 = reader.result.split(',')[1];
+                        resolve(base64);
+                    };
+                    reader.onerror = error => reject(error);
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // Construir payload
+            const payload = {};
+            const infoAdicional = {};
+            // Campos específicos de info adicional para agruparlos
+            const camposInfoAdicional = [
+                'lugar_expedicion', 'estrato', 'estado_civil', 'nivel_formacion', 
+                'ocupacion', 'grupo_sisben', 'subgrupo_sisben', 'eps', 
+                'discapacidad', 'tipo_sangre'
+            ];
+
+            // Procesar campos de texto
+            for (const [key, value] of formData.entries()) {
+                if (!(value instanceof File)) {
+                    if (camposInfoAdicional.includes(key)) {
+                        // Si el campo tiene valor, lo agregamos al objeto anidado
+                        if(value.trim() !== "") {
+                            infoAdicional[key] = value;
+                        }
+                    } else {
+                        payload[key] = value;
+                    }
+                }
+            }
+
+            // Agregar info adicional solo si no está vacía y es el programa correcto
+            if (payload.tipo_programa === 'Programa Técnico Laboral' && Object.keys(infoAdicional).length > 0) {
+                payload.informacion_adicional = infoAdicional;
+            }
+
+            // Procesar archivos
+            const filesPayload = {};
+            for (const [key, value] of formData.entries()) {
+                if (value instanceof File && value.name) {
+                    try {
+                        const b64 = await fileToBase64(value);
+                        filesPayload[key] = { 
+                            filename: value.name, 
+                            mimetype: value.type, 
+                            base64: b64 
+                        };
+                    } catch (err) {
+                        console.error("Error convirtiendo archivo", err);
+                        throw new Error("Error procesando archivos adjuntos.");
+                    }
+                }
+            }
+
+            if (Object.keys(filesPayload).length > 0) {
+                payload.archivos = filesPayload;
+            }
+
+            // Debug para verificar estructura antes de enviar (visible en consola)
+            console.log("Payload a enviar:", payload);
+
+            // POST al webhook
+            const res = await fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json' 
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) {
+                throw new Error(`Error del servidor: ${res.status} ${res.statusText}`);
+            }
+            
+            // Intentar leer respuesta texto o json por si el webhook devuelve algo
+            const responseText = await res.text();
+            return responseText;
+        }
+    </script>
+</body>
+</html>
